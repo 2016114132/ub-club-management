@@ -65,7 +65,7 @@ export default function LoginPage() {
           </button>
 
           <p className="text-xs text-text-light text-center pt-2">
-            You can switch roles anytime using the button in the bottom right corner.
+            Log out from the profile menu to switch roles.
           </p>
         </Card>
       </div>
