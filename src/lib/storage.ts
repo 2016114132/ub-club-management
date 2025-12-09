@@ -87,6 +87,12 @@ export function updatePost(postId: string, updates: Partial<Post>): void {
   }
 }
 
+export function deletePost(postId: string): void {
+  const posts = getPosts();
+  const filteredPosts = posts.filter((p) => p.id !== postId);
+  savePosts(filteredPosts);
+}
+
 // Request operations
 export function getRequests(): Request[] {
   return getItem<Request[]>(STORAGE_KEYS.REQUESTS, initialRequests);

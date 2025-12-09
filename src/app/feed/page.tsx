@@ -3,30 +3,30 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Rss } from 'lucide-react';
-import { Button, Spinner, EmptyState, Card, Avatar, Select } from '@/components/ui';
+import { Button, Spinner, EmptyState, Card, Avatar, Select, Modal } from '@/components/ui';
 import { PageHeader, Sidebar, UpcomingEvents } from '@/components/layout';
-import { PostCard, CreatePostModal } from '@/components/posts';
+import { PostCard, CreatePostModal, EditPostModal } from '@/components/posts';
 import { useAuth } from '@/context/AuthContext';
-import { getPosts, updatePost, getClubs } from '@/lib/storage';
+import { useToast } from '@/context/ToastContext';
+import { getPosts, updatePost, deletePost, getClubs } from '@/lib/storage';
 import type { Post } from '@/types';
 
 export default function FeedPage() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin } = useAuth();
+  const { success } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [audienceFilter, setAudienceFilter] = useState('');
   const [sortBy, setSortBy] = useState('latest');
 
   const clubs = getClubs();
 
   useEffect(() => {
-    // Redirect non-authenticated users to home page
-    if (!isAuthenticated) {
-      router.push('/');
-      return;
-    }
     // Redirect admins to admin dashboard
     if (isAdmin) {
       router.push('/admin');
@@ -46,6 +46,11 @@ export default function FeedPage() {
   const filteredPosts = useMemo(() => {
     let result = [...posts];
 
+    // Filter by visibility - unauthenticated users can only see public posts
+    if (!isAuthenticated) {
+      result = result.filter((post) => post.visibility === 'public');
+    }
+
     // Filter by audience/club
     if (audienceFilter) {
       result = result.filter((post) => post.clubId === audienceFilter);
@@ -61,7 +66,7 @@ export default function FeedPage() {
     }
 
     return result;
-  }, [posts, audienceFilter, sortBy]);
+  }, [posts, audienceFilter, sortBy, isAuthenticated]);
 
   const handlePostCreated = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
@@ -84,6 +89,35 @@ export default function FeedPage() {
         return post;
       })
     );
+  };
+
+  const handleEdit = (post: Post) => {
+    setSelectedPost(post);
+    setIsEditModalOpen(true);
+  };
+
+  const handlePostUpdated = (updatedPost: Post) => {
+    setPosts((prev) =>
+      prev.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+    );
+  };
+
+  const handleDeleteClick = (postId: string) => {
+    const post = posts.find((p) => p.id === postId);
+    if (post) {
+      setSelectedPost(post);
+      setIsDeleteModalOpen(true);
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedPost) {
+      deletePost(selectedPost.id);
+      setPosts((prev) => prev.filter((p) => p.id !== selectedPost.id));
+      success('Post deleted successfully!');
+      setIsDeleteModalOpen(false);
+      setSelectedPost(null);
+    }
   };
 
   const audienceOptions = [
@@ -176,7 +210,13 @@ export default function FeedPage() {
                   className="stagger-item"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <PostCard post={post} onLike={handleLike} />
+                  <PostCard 
+                    post={post} 
+                    currentUserId={user?.id}
+                    onLike={handleLike}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteClick}
+                  />
                 </div>
               ))}
             </div>
@@ -195,6 +235,51 @@ export default function FeedPage() {
         onClose={() => setIsModalOpen(false)}
         onPostCreated={handlePostCreated}
       />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedPost(null);
+        }}
+        post={selectedPost}
+        onPostUpdated={handlePostUpdated}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedPost(null);
+        }}
+        title="Delete Post"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-text-gray">
+            Are you sure you want to delete this post? This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteModalOpen(false);
+                setSelectedPost(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleConfirmDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

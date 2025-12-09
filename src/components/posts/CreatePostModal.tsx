@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Image, X } from 'lucide-react';
+import { Image, X, Globe, Lock } from 'lucide-react';
 import { Modal, Button, Textarea, Select, Avatar } from '@/components/ui';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { addPost, getClubs } from '@/lib/storage';
 import { generateId } from '@/lib/utils';
 import { CLUB_GRADIENTS } from '@/lib/constants';
-import type { Post } from '@/types';
+import type { Post, PostVisibility } from '@/types';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -25,6 +25,7 @@ export default function CreatePostModal({
   const { success, error } = useToast();
   const [content, setContent] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
+  const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [includeImage, setIncludeImage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ content?: string; club?: string }>({});
@@ -84,6 +85,7 @@ export default function CreatePostModal({
       clubId: selectedClub,
       clubName: club?.name || '',
       content: content.trim(),
+      visibility: visibility,
       audience: 'public',
       audienceName: 'Everyone',
       taggedMembers: [],
@@ -103,6 +105,7 @@ export default function CreatePostModal({
     // Reset form - set to first club for next time
     setContent('');
     setSelectedClub(userClubs.length > 0 ? userClubs[0].id : '');
+    setVisibility('public');
     setIncludeImage(false);
     setErrors({});
     setIsLoading(false);
@@ -112,6 +115,7 @@ export default function CreatePostModal({
   const handleClose = () => {
     setContent('');
     setSelectedClub(userClubs.length > 0 ? userClubs[0].id : '');
+    setVisibility('public');
     setIncludeImage(false);
     setErrors({});
     onClose();
@@ -145,6 +149,45 @@ export default function CreatePostModal({
           error={errors.club}
           required
         />
+
+        {/* Visibility Toggle */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-text-dark">
+            Post Visibility
+          </label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setVisibility('public')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors flex-1 cursor-pointer ${
+                visibility === 'public'
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-gray-200 text-text-gray hover:border-primary hover:text-primary'
+              }`}
+            >
+              <Globe className="w-4 h-4" />
+              <div className="text-left">
+                <span className="text-sm font-medium">Public</span>
+                <p className="text-xs opacity-75">Anyone can see this post</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setVisibility('private')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors flex-1 cursor-pointer ${
+                visibility === 'private'
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-gray-200 text-text-gray hover:border-primary hover:text-primary'
+              }`}
+            >
+              <Lock className="w-4 h-4" />
+              <div className="text-left">
+                <span className="text-sm font-medium">Private</span>
+                <p className="text-xs opacity-75">Only signed-in users</p>
+              </div>
+            </button>
+          </div>
+        </div>
 
         {/* Post Content */}
         <div className="space-y-1">

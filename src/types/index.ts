@@ -32,6 +32,8 @@ export interface Club {
 }
 
 // Post Types
+export type PostVisibility = 'public' | 'private';
+
 export interface Post {
   id: string;
   authorId: string;
@@ -42,6 +44,7 @@ export interface Post {
   content: string;
   clubId?: string;
   clubName: string;
+  visibility: PostVisibility;
   audience: 'public' | string;
   audienceName: string;
   taggedMembers: string[];

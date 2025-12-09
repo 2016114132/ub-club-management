@@ -1,16 +1,47 @@
 'use client';
 
-import { Heart, MessageCircle, Share2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Heart, MessageCircle, Share2, Globe, Lock, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { Card, Avatar, Badge } from '@/components/ui';
 import { formatRelativeTime } from '@/lib/utils';
 import type { Post } from '@/types';
 
 interface PostCardProps {
   post: Post;
+  currentUserId?: string;
   onLike?: (postId: string) => void;
+  onEdit?: (post: Post) => void;
+  onDelete?: (postId: string) => void;
 }
 
-export default function PostCard({ post, onLike }: PostCardProps) {
+export default function PostCard({ post, currentUserId, onLike, onEdit, onDelete }: PostCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const isOwner = currentUserId && post.authorId === currentUserId;
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleEdit = () => {
+    setMenuOpen(false);
+    onEdit?.(post);
+  };
+
+  const handleDelete = () => {
+    setMenuOpen(false);
+    onDelete?.(post.id);
+  };
+
   return (
     <Card padding="none" className="overflow-hidden">
       {/* Post Header */}
@@ -24,11 +55,52 @@ export default function PostCard({ post, onLike }: PostCardProps) {
             <Badge variant="primary" size="sm">
               {post.clubName}
             </Badge>
+            {post.visibility === 'private' ? (
+              <span className="flex items-center gap-1 text-xs text-text-gray" title="Only visible to signed-in users">
+                <Lock className="w-3 h-3" />
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-xs text-text-gray" title="Visible to everyone">
+                <Globe className="w-3 h-3" />
+              </span>
+            )}
           </div>
           <span className="text-sm text-text-gray">
             {formatRelativeTime(post.createdAt)}
           </span>
         </div>
+        
+        {/* More Options Menu (only for post owner) */}
+        {isOwner && (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-lg text-text-gray hover:bg-gray-100 transition-colors cursor-pointer"
+              title="More options"
+            >
+              <MoreVertical className="w-5 h-5" />
+            </button>
+            
+            {menuOpen && (
+              <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-10">
+                <button
+                  onClick={handleEdit}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-text-dark hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger/5 transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Post Content */}

@@ -37,6 +37,7 @@ export default function Navbar() {
 
   const publicLinks = [
     { href: '/', label: 'Home' },
+    { href: '/feed', label: 'Feed' },
     { href: '/clubs', label: 'Clubs' },
   ];
 
@@ -92,7 +93,7 @@ export default function Navbar() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors duration-200"
+                  className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors duration-200 cursor-pointer"
                 >
                   <Avatar fallback={user?.name || 'User'} size="sm" />
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -108,7 +109,7 @@ export default function Navbar() {
                     <div className="py-1">
                       <Link
                         href="/profile"
-                        className="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 transition-colors text-sm"
+                        className="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
                         onClick={() => setDropdownOpen(false)}
                       >
                         <User className="w-4 h-4 text-text-gray" />
@@ -119,7 +120,7 @@ export default function Navbar() {
                     <div className="border-t border-gray-100 py-1">
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2.5 px-3 py-2 hover:bg-danger/5 w-full text-left text-danger transition-colors text-sm"
+                        className="flex items-center gap-2.5 px-3 py-2 hover:bg-danger/5 w-full text-left text-danger transition-colors text-sm cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>

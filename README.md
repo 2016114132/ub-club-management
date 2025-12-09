@@ -39,7 +39,7 @@ UB Clubs allows students to discover, join, and engage with campus clubs. Admini
 1. Clone the repository (development branch)
 ```bash
 git clone -b development https://github.com/2016114132/ub-club-management.git
-cd ub-club-management/app
+cd ub-club-management
 ```
 
 2. Install dependencies
