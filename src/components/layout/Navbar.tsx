@@ -64,7 +64,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur flex items-center justify-center group-hover:bg-white/30 transition-colors duration-200">
               <span className="text-base font-bold text-white">U</span>
             </div>
-            <span className="text-lg font-bold tracking-tight text-white">UB Clubs</span>
+            <span className="text-lg font-bold tracking-tight text-white">UBCMS</span>
             {isAdmin && (
               <span className="text-xs bg-gold/90 text-primary-dark px-2 py-0.5 rounded-full font-semibold">Admin</span>
             )}

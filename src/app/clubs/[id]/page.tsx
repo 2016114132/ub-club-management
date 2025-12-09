@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useSearchParams, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Users, Calendar, ChevronRight, Sparkles, Heart } from 'lucide-react';
 import { Button, Card, Spinner, Badge, Avatar } from '@/components/ui';
@@ -13,8 +13,13 @@ import type { Club } from '@/types';
 
 export default function ClubDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const [club, setClub] = useState<Club | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Determine back navigation based on referrer
+  const fromMyClubs = searchParams.get('from') === 'my-clubs';
+  const backHref = fromMyClubs ? '/my-clubs' : '/clubs';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,7 +49,7 @@ export default function ClubDetailPage() {
       <PageHeader
         title={club.name}
         showBack
-        backHref="/clubs"
+        backHref={backHref}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

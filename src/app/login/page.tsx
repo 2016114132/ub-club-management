@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { User, Shield } from 'lucide-react';
 import { Card, Button } from '@/components/ui';
 import { PageHeader } from '@/components/layout';
@@ -26,8 +27,15 @@ export default function LoginPage() {
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <span className="text-3xl font-bold text-primary">U</span>
+          <div className="mb-6">
+            <Image 
+              src="/ubcms-logo.png" 
+              alt="UBCMS Logo" 
+              width={280} 
+              height={93}
+              className="w-auto h-24 mx-auto object-contain"
+              priority
+            />
           </div>
           <h1 className="text-2xl font-bold text-text-dark mb-2">Welcome to UB Clubs</h1>
           <p className="text-text-gray">Select a role to explore the demo</p>

@@ -12,7 +12,7 @@ export default function ResetDataButton() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 md:bottom-4 bottom-20 right-4 z-50">
       <button
         onClick={handleResetData}
         className="flex items-center gap-1.5 bg-white rounded-lg shadow-lg border border-border px-3 py-1.5 hover:shadow-xl transition-all text-xs text-text-gray hover:text-danger"
