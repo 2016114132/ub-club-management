@@ -24,13 +24,13 @@ export default function LandingPage() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
       {/* Logo */}
-      <div className="mb-8">
+      <div className="mb-8 w-full max-w-2xl">
         <Image 
           src="/ubcms-logo.png" 
           alt="UBCMS Logo" 
           width={700} 
           height={233}
-          className="w-auto h-56 object-contain"
+          className="w-full h-auto"
           priority
         />
       </div>
