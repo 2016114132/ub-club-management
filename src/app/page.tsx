@@ -24,12 +24,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
       {/* Logo */}
-      <div className="mb-8 w-[630px] h-[210px] mx-auto" style={{ minWidth: '630px', minHeight: '210px' }}>
+      <div className="mb-8 w-[700px] h-[233px] mx-auto" style={{ minWidth: '700px', minHeight: '233px' }}>
         <Image 
           src="/ubcms-logo.png" 
           alt="UBCMS Logo" 
-          width={630} 
-          height={210}
+          width={700} 
+          height={233}
           className="w-full h-full"
           style={{ objectFit: 'contain' }}
           priority
