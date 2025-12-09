@@ -67,7 +67,7 @@ export default function AdminRequestsPage() {
 
   // Filtered requests
   const filteredRequests = useMemo(() => {
-    return requests.filter((req) => {
+    const filtered = requests.filter((req) => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -88,20 +88,18 @@ export default function AdminRequestsPage() {
       }
 
       // Date range filter
-      if (startDate) {
-        const reqDate = new Date(req.requestDate);
-        const start = new Date(startDate);
-        if (reqDate < start) return false;
+      if (startDate && req.requestDate < startDate) {
+        return false;
       }
 
-      if (endDate) {
-        const reqDate = new Date(req.requestDate);
-        const end = new Date(endDate);
-        if (reqDate > end) return false;
+      if (endDate && req.requestDate > endDate) {
+        return false;
       }
 
       return true;
     });
+    
+    return filtered;
   }, [requests, searchQuery, statusFilters, typeFilters, startDate, endDate]);
 
   // Pending requests for bulk selection
