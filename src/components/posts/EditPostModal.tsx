@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Globe, Lock } from 'lucide-react';
-import { Modal, Button, Textarea } from '@/components/ui';
+import { Modal, Button, Textarea, Select } from '@/components/ui';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
-import { updatePost } from '@/lib/storage';
+import { updatePost, getClubs } from '@/lib/storage';
 import type { Post, PostVisibility } from '@/types';
 
 interface EditPostModalProps {
@@ -20,27 +21,44 @@ export default function EditPostModal({
   post,
   onPostUpdated,
 }: EditPostModalProps) {
+  const { user } = useAuth();
   const { success } = useToast();
   const [content, setContent] = useState('');
+  const [selectedClub, setSelectedClub] = useState('');
   const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ content?: string }>({});
+  const [errors, setErrors] = useState<{ content?: string; club?: string }>({});
+
+  const clubs = getClubs();
+  const userClubs = clubs.filter((club) =>
+    user?.clubs.includes(club.id)
+  );
+
+  const clubOptions = userClubs.map((club) => ({
+    value: club.id,
+    label: club.name,
+  }));
 
   // Populate form when post changes
   useEffect(() => {
     if (post) {
       setContent(post.content);
+      setSelectedClub(post.clubId || '');
       setVisibility(post.visibility || 'public');
     }
   }, [post]);
 
   const validateForm = (): boolean => {
-    const newErrors: { content?: string } = {};
+    const newErrors: { content?: string; club?: string } = {};
 
     if (!content.trim()) {
       newErrors.content = 'Post content is required';
     } else if (content.trim().length < 10) {
       newErrors.content = 'Post must be at least 10 characters';
+    }
+
+    if (!selectedClub) {
+      newErrors.club = 'Please select a club';
     }
 
     setErrors(newErrors);
@@ -55,13 +73,22 @@ export default function EditPostModal({
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 400));
 
+    const club = clubs.find((c) => c.id === selectedClub);
+
     const updatedPost: Post = {
       ...post,
       content: content.trim(),
+      clubId: selectedClub,
+      clubName: club?.name || '',
       visibility: visibility,
     };
 
-    updatePost(post.id, { content: content.trim(), visibility: visibility });
+    updatePost(post.id, { 
+      content: content.trim(), 
+      clubId: selectedClub,
+      clubName: club?.name || '',
+      visibility: visibility 
+    });
     onPostUpdated(updatedPost);
     success('Post updated successfully!');
 
@@ -84,6 +111,16 @@ export default function EditPostModal({
       size="md"
     >
       <div className="space-y-4">
+        {/* Club Selection */}
+        <Select
+          label="Post to Club"
+          options={clubOptions}
+          value={selectedClub}
+          onChange={(value) => setSelectedClub(value)}
+          error={errors.club}
+          required
+        />
+
         {/* Visibility Toggle */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-text-dark">

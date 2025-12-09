@@ -61,7 +61,11 @@ export default function ConfirmActionModal({
               <div>
                 <p className="font-semibold text-text-dark">{request.studentName}</p>
                 <p className="text-sm text-text-gray">
-                  {request.type === 'join' ? 'Wants to join' : 'Requesting'} <span className="font-medium">{request.clubName}</span>
+                  {request.type === 'join' 
+                    ? 'Wants to join' 
+                    : request.type === 'create' 
+                      ? 'Wants to create' 
+                      : 'Wants to update'} <span className="font-medium">{request.clubName}</span>
                 </p>
               </div>
             </div>

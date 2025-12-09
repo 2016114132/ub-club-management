@@ -65,8 +65,8 @@ export default function RequestRow({
 
       {/* Request Type */}
       <td className="px-4 py-3">
-        <Badge variant={request.type === 'join' ? 'primary' : 'info'}>
-          {request.type === 'join' ? 'Join' : 'Leave'}
+        <Badge variant={request.type === 'join' ? 'primary' : request.type === 'create' ? 'success' : 'info'}>
+          {request.type === 'join' ? 'Join' : request.type === 'create' ? 'Create' : 'Update'}
         </Badge>
       </td>
 

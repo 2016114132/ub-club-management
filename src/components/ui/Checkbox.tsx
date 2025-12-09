@@ -43,7 +43,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             {...props}
           />
           <div className={`
-            w-5 h-5 border-2 rounded-md flex items-center justify-center transition-all duration-200
+            w-5 h-5 border-2 rounded-sm flex items-center justify-center transition-all duration-200
             peer-focus-visible:ring-4 peer-focus-visible:ring-primary/20
             ${isCheckedOrIndeterminate
               ? 'bg-gradient-to-br from-primary to-primary-dark border-primary shadow-sm'

@@ -35,8 +35,9 @@ export default function RequestFilters({
 
   const typeOptions = [
     { value: '', label: 'All Types' },
-    { value: 'join', label: 'Join Requests' },
-    { value: 'leave', label: 'Leave Requests' },
+    { value: 'join', label: 'Join Club' },
+    { value: 'create', label: 'Create Club' },
+    { value: 'update', label: 'Update Club' },
   ];
 
   const clubOptions = [
