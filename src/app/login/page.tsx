@@ -73,7 +73,7 @@ export default function LoginPage() {
           </button>
 
           <p className="text-xs text-text-light text-center pt-2">
-            Log out from the profile menu to switch roles.
+            Sign out from the profile menu to switch roles.
           </p>
         </Card>
       </div>

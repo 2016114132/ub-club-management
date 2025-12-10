@@ -60,7 +60,7 @@ export default function MyClubsPage() {
           title="No club memberships"
           description="You haven't joined any clubs yet. Explore clubs and find one that interests you!"
           action={{
-            label: 'Browse Clubs',
+            label: 'Explore Clubs',
             onClick: () => router.push('/clubs'),
           }}
         />

@@ -123,7 +123,7 @@ export default function Navbar() {
                         className="flex items-center gap-2.5 px-3 py-2 hover:bg-danger/5 w-full text-left text-danger transition-colors text-sm cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>
@@ -134,7 +134,7 @@ export default function Navbar() {
                 href="/login"
                 className="px-3 py-1.5 text-sm font-semibold border-2 border-white/40 text-white rounded-lg hover:bg-white/15 hover:border-white/60 transition-all duration-150"
               >
-                Login
+                Sign In
               </Link>
             )}
 

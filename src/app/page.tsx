@@ -50,7 +50,7 @@ export default function LandingPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link href="/clubs">
           <Button size="lg">
-            Browse Clubs
+            Explore Clubs
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </Link>

@@ -23,7 +23,7 @@ export default function NotFound() {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link href="/clubs">
           <Button icon={<Home className="w-4 h-4" />}>
-            Browse Clubs
+            Explore Clubs
           </Button>
         </Link>
         <Button variant="outline" onClick={() => router.back()} icon={<ArrowLeft className="w-4 h-4" />}>
